@@ -1,60 +1,19 @@
 package kata4;
 
-import static com.oracle.jrockit.jfr.Transition.From;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Date;
+import java.util.ArrayList;
 
 public class Kata4 {
 
-    public static void main(String[] args) throws FileNotFoundException, IOException {
+    public static void main(String[] args) throws IOException{
 
-        String name = "/Users/Loedded";
-        File file = new File (name);
+        String name = "/Users/Loedded/Desktop/emails.txt";
         
-        String [] filesarray;
-        filesarray = file.list();
+        ArrayList <String> listMail = MailList.read(name);
         
-        //for (Object files : filesarray) {
-            //System.out.println(files);
-        //}
+        Histogram <String> histogram = MailHistogramBuilder.build(listMail);
         
-        //print(file.listFiles(),"");
-    
-        String from = "/Users/Loedded/Desktop/CC-14-30.pdf";
-        String to = "/Users/Loedded/Desktop/CC-14-31.pdf";
-        
-        
-        BufferedInputStream input = new BufferedInputStream(new FileInputStream(new File (from)));
-        BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(new File(to)));
-        
-        byte [] buffer = new byte [1024];
-        Date date = new Date();
-        while (true){
-            int read = input .read(buffer);
-            if(read < 0) break;
-            output.write(buffer);
-        }
-        
-        input.close();
-        output.flush();
-        output.close();
-        
-        System.out.println(new Date().getTime() - date.getTime()+ " msg");
-    }
-
-    private static void print(File[] listFiles, String ident) {
-        if(listFiles == null) return;
-        for (File listFile : listFiles) {
-            System.out.println(ident+(listFile.isDirectory()?"+":" ")+listFile.getName());
-            if(listFile.isFile() || listFile.isHidden()) continue;
-            print (listFile.listFiles(),ident+" ");
-        }
+        new HistogramDisplay(histogram).execute();
     }
 
 }
